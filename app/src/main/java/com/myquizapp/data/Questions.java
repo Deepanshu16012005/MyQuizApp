@@ -5,6 +5,7 @@ public class Questions {
     private String question;
     private String option1,option2,option3,option4;
     private String ans;
+    int checkvalue=-1;
 
     public Questions() {
     }
@@ -21,6 +22,14 @@ public class Questions {
 
     public int getId() {
         return Id;
+    }
+
+    public int getCheckvalue() {
+        return checkvalue;
+    }
+
+    public void setCheckvalue(int checkvalue) {
+        this.checkvalue = checkvalue;
     }
 
     public void setId(int id) {
