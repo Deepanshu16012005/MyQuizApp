@@ -2,6 +2,8 @@ package com.myquizapp;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.provider.SyncStateContract;
 import android.view.View;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -12,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.myquizapp.config.constants;
 import com.myquizapp.data.Questions;
 import com.myquizapp.databinding.ActivityMainBinding;
 import com.myquizapp.helper.QuestionGenerator;
@@ -23,8 +26,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ActivityMainBinding binding;
     private RadioButton checkButtons[]=new RadioButton[4];
     int CurrentIndex=0;
+    private CountDownTimer Timer;
     List<Questions> questions;
-
+    private int TimeLeft= constants.TotalExamTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +36,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         binding=ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initComponents();
+        StartTime();
 
+
+    }
+    private void SumbitTest(){
+        Toast.makeText(this, "Sumbitted", Toast.LENGTH_SHORT).show();
+    }
+    private void StartTime() {
+        Timer=new CountDownTimer(constants.TotalExamTime*1000,1000) {
+            @Override
+            public void onTick(long l) {
+                int min = TimeLeft/60;
+                int sec = TimeLeft%60;
+                binding.timer.setText("Time left: "+min+" min "+sec+" sec");
+                TimeLeft--;
+                binding.circularProgressBar.setProgress((float)TimeLeft/constants.TotalExamTime*100);
+            }
+
+            @Override
+            public void onFinish() {
+//                Toast.makeText(MainActivity.this, "Time Finished", Toast.LENGTH_SHORT).show();
+                SumbitTest();
+                binding.timer.setText("Time Finished");
+            }
+        };
+        Timer.start();
     }
 
     private void initComponents() {
@@ -53,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
         binding.previousButton.setOnClickListener(e->{
             previousQuestion();
+        });
+        binding.submitButton.setOnClickListener(e->{
+            SumbitTest();
         });
     }
 
